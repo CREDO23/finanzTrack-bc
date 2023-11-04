@@ -2,13 +2,17 @@ import * as morgan from 'morgan';
 import * as express from 'express';
 import * as http from 'http';
 import * as cors from 'cors';
-import error from 'http-errors';
+import * as error from 'http-errors';
+import { dbConnection } from './config/db';
+import usersRouter from './routes/user';
+import authRouter from './routes/auth';
 
 class App {
   app: express.Application = express();
   server: http.Server = http.createServer(this.app);
 
   public init = (): Promise<http.Server> => {
+    this.connectDb();
     this.middlewares();
     this.routes();
     this.errorHandler();
@@ -16,10 +20,17 @@ class App {
     return Promise.resolve(this.server);
   };
 
+  private connectDb = (): void => {
+    dbConnection();
+  };
+
   private routes = (): void => {
     this.app.get('/', (req, res) => {
       res.send('Server is running');
     });
+
+    this.app.use('/auth', authRouter);
+    this.app.use('/users', usersRouter);
   };
 
   private middlewares = (): void => {
@@ -47,7 +58,7 @@ class App {
         res: express.Response,
         next: express.NextFunction,
       ) => {
-        res.status(err.status || 500);
+        res.status(err.isJoi ? 422 : err.status || 500);
         res.json(<IClientResponse>{
           message: err.message,
           data: null,
