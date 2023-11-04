@@ -1,0 +1,47 @@
+{
+  "name": "finanztrack",
+  "version": "1.0.0",
+  "description": "A financial tracking application that assists users in managing their personal finances and expenses.",
+  "main": "index.js",
+  "scripts": {
+   "start:dev" : "ts-node-dev --respawn --transpile-only src/index.ts",
+   "prepare-husky": "npx husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CREDO23/finanzTrack-bc.git"
+  },
+  "keywords": [
+    "alx-se"
+  ],
+  "author": "CREDO23",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CREDO23/finanzTrack-bc/issues"
+  },
+  "homepage": "https://github.com/CREDO23/finanzTrack-bc#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "http-errors": "^2.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.1",
+    "@types/cors": "^2.8.15",
+    "@types/express": "^4.17.20",
+    "@types/http-errors": "^2.0.3",
+    "@types/jsonwebtoken": "^9.0.4",
+    "@types/morgan": "^1.9.7",
+    "@typescript-eslint/parser": "^6.9.1",
+    "eslint": "^8.53.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.0.2",
+    "prettier": "^3.0.3",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2"
+  }
+}
