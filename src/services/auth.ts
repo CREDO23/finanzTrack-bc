@@ -58,6 +58,8 @@ export class AuthService {
           const validCredentials =
             await AuthValidationService.login.validateAsync(credetials);
 
+          console.log(4);
+
           if (validCredentials) {
             const user = await User.findOne({
               where: { email: validCredentials.email },
