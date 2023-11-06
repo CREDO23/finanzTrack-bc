@@ -2,6 +2,10 @@
   "env": {
     "node": true
   },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
@@ -10,9 +14,6 @@
   "rules": {
     "no-console": "warn"
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended"
-  ],
+
   "plugins": ["@typescript-eslint"]
 }

@@ -8,7 +8,7 @@
     "prepare-husky": "npx husky install",
     "build": "tsc",
     "lint": "eslint src/**/*.ts",
-    "start" : "node dist/index.js" 
+    "start": "node dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -37,7 +37,8 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "pg": "^8.11.3",
-    "sequelize": "^6.34.0"
+    "sequelize": "^6.34.0",
+    "typescript": "^5.2.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.1",
@@ -53,7 +54,6 @@
     "husky": "^8.0.3",
     "lint-staged": "^15.0.2",
     "prettier": "^3.0.3",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.2.2"
+    "ts-node-dev": "^2.0.0"
   }
 }
