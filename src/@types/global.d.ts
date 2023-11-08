@@ -11,6 +11,21 @@ declare global {
     email: string;
     password?: string;
   }
+
+  interface ITransactionCategoryType {
+    label: 'expense' | 'income';
+    description: string;
+  }
+
+  interface ITransactionCategory {
+    name: string;
+    description: string;
+  }
+
+  interface ITransaction {
+    amount: number;
+    description: string;
+  }
 }
 
 export {};

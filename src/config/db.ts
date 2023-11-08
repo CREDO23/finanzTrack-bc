@@ -10,13 +10,15 @@ const sequelize = new Sequelize(`${process.env.DB_URI}`, {
   logging: false,
 });
 
+import '../models';
+
 const dbConnection = async () => {
   try {
     // authenticate
     sequelize.authenticate();
 
     //synch all tables
-    sequelize.sync({ alter: true });
+    sequelize.sync({ force: true });
     console.log('Database connection established');
   } catch (error) {
     console.log(error);
