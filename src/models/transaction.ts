@@ -1,20 +1,41 @@
 import { sequelize } from '../config/db';
 import {
+  Association,
+  BelongsToCreateAssociationMixin,
+  BelongsToGetAssociationMixin,
+  BelongsToSetAssociationMixin,
   CreationOptional,
   DataTypes,
+  ForeignKey,
   InferAttributes,
   InferCreationAttributes,
   Model,
 } from 'sequelize';
+import TransactionCategory from './transactionCategory';
 
 class Transaction extends Model<
   InferAttributes<Transaction>,
   InferCreationAttributes<Transaction>
 > {
   declare id: CreationOptional<string>;
-  declare amount: string;
+  declare amount: number;
   declare description: string;
-  declare category_id: string;
+
+  // Foreign key
+  declare category_id: ForeignKey<TransactionCategory['id']>;
+
+  // Category mixins
+  declare setCategory: BelongsToSetAssociationMixin<
+    TransactionCategory,
+    string
+  >;
+  declare getCategory: BelongsToGetAssociationMixin<TransactionCategory>;
+  declare createCategory: BelongsToCreateAssociationMixin<TransactionCategory>;
+
+  // Associations
+  declare static associations: {
+    category: Association<Transaction, TransactionCategory>;
+  };
 }
 
 Transaction.init(
@@ -27,19 +48,15 @@ Transaction.init(
       primaryKey: true,
     },
     amount: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     description: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    category_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
   },
-  { sequelize, modelName: 'transaction_categories' },
+  { sequelize, modelName: 'transactions' },
 );
 
-Transaction.sync();
+export default Transaction;

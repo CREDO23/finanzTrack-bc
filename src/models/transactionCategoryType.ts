@@ -13,73 +13,57 @@ import {
   HasManyRemoveAssociationMixin,
   HasManyRemoveAssociationsMixin,
   Model,
-  ModelDefined,
-  Optional,
-  Sequelize,
   InferAttributes,
   InferCreationAttributes,
   CreationOptional,
   NonAttribute,
-  ForeignKey,
 } from 'sequelize';
 import TransactionCategory from './transactionCategory';
 
 export class TransactionCategoryType extends Model<
-  InferAttributes<TransactionCategoryType, { omit: 'transaction_categories' }>,
-  InferCreationAttributes<
-    TransactionCategoryType,
-    { omit: 'transaction_categories' }
-  >
+  InferAttributes<TransactionCategoryType, { omit: 'categories' }>,
+  InferCreationAttributes<TransactionCategoryType, { omit: 'categories' }>
 > {
   declare id: CreationOptional<string>;
   declare label: string;
   declare description: string;
 
-  // Loaded with association
-  declare transaction_categories: NonAttribute<TransactionCategory[]>;
+  // Loaded after association
+  declare categories: NonAttribute<TransactionCategory[]>;
 
   // Association methods
-  declare getTransactionCategories: HasManyGetAssociationsMixin<TransactionCategory>;
-  declare addTransactionCategory: HasManyAddAssociationMixin<
+  declare getCategories: HasManyGetAssociationsMixin<TransactionCategory[]>;
+  declare addCategory: HasManyAddAssociationMixin<TransactionCategory, string>;
+  declare addCategories: HasManyAddAssociationsMixin<
     TransactionCategory,
-    number
+    string
   >;
-  declare addTransactionCategories: HasManyAddAssociationsMixin<
+  declare setCategories: HasManySetAssociationsMixin<
     TransactionCategory,
-    number
+    string
   >;
-  declare setTransactionCategories: HasManySetAssociationsMixin<
+  declare removeCategory: HasManyRemoveAssociationMixin<
     TransactionCategory,
-    number
+    string
   >;
-  declare removeTransactionCategory: HasManyRemoveAssociationMixin<
+  declare removeCategories: HasManyRemoveAssociationsMixin<
     TransactionCategory,
-    number
+    string
   >;
-  declare removeTransactionCategories: HasManyRemoveAssociationsMixin<
+  declare hasCategory: HasManyHasAssociationMixin<TransactionCategory, string>;
+  declare hasCategories: HasManyHasAssociationsMixin<
     TransactionCategory,
-    number
+    string
   >;
-  declare hasTransactionCategory: HasManyHasAssociationMixin<
+  declare countCategories: HasManyCountAssociationsMixin;
+  declare createCategory: HasManyCreateAssociationMixin<
     TransactionCategory,
-    number
-  >;
-  declare hasTransactionCategories: HasManyHasAssociationsMixin<
-    TransactionCategory,
-    number
-  >;
-  declare countTransactionCategories: HasManyCountAssociationsMixin;
-  declare createTransactionCategory: HasManyCreateAssociationMixin<
-    TransactionCategory,
-    'category_type_id'
+    'type_id'
   >;
 
   // Associations
   declare static associations: {
-    transaction_categories: Association<
-      TransactionCategoryType,
-      TransactionCategory
-    >;
+    category: Association<TransactionCategoryType, TransactionCategory>;
   };
 }
 

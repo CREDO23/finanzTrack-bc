@@ -10,6 +10,7 @@ const sequelize = new Sequelize(`${process.env.DB_URI}`, {
   logging: false,
 });
 
+// Load all models/associations
 import '../models';
 
 const dbConnection = async () => {
