@@ -20,6 +20,8 @@ class Transaction extends Model<
   declare id: CreationOptional<string>;
   declare amount: number;
   declare description: string;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 
   // Foreign key
   declare category_id: ForeignKey<TransactionCategory['id']>;
@@ -55,6 +57,8 @@ Transaction.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
   },
   { sequelize, modelName: 'transactions' },
 );

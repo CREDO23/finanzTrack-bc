@@ -65,6 +65,15 @@ export class TransactionCategoryService {
         try {
           const transactionCategories = await TransactionCategory.findAll({
             raw: true,
+            include: [
+              {
+                model: TransactionCategoryType,
+                attributes: ['id', 'label', 'description'],
+                as: 'type',
+              },
+            ],
+            nest: true,
+            attributes: { exclude: ['type_id'] },
           });
 
           resolve(transactionCategories);

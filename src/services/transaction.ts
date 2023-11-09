@@ -4,6 +4,8 @@ import * as error from 'http-errors';
 import { validate as isValidUUID } from 'uuid';
 import TransactionCategory from '../models/transactionCategory';
 import { TransactionValidationService } from './validations/transaction';
+import TransactionCategoryType from '../models/transactionCategoryType';
+import { sequelize } from '../config/db';
 
 export class TransactionService {
   static create = async (
@@ -49,7 +51,23 @@ export class TransactionService {
   static getAll = async (): Promise<Error | Transaction[]> => {
     return new Promise<Error | Transaction[]>(async (resolve, reject) => {
       try {
-        const transactions = await Transaction.findAll({ raw: true });
+        const transactions = await Transaction.findAll({
+          raw: true,
+          nest: true,
+          attributes: ['id', 'amount', 'description'],
+          include: {
+            model: TransactionCategory,
+            attributes: [],
+            as: 'category',
+            include: [
+              {
+                model: TransactionCategoryType,
+                attributes: [],
+                as: 'type',
+              },
+            ],
+          },
+        });
 
         resolve(transactions);
       } catch (error) {
