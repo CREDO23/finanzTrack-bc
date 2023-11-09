@@ -1,6 +1,5 @@
 import { UUID } from 'crypto';
 import { User } from '../models/user';
-import * as error from 'http-errors';
 
 export class UserService {
   static getAll = async (): Promise<Error | IUser[]> => {
