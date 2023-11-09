@@ -8,6 +8,7 @@ import usersRouter from './routes/user';
 import authRouter from './routes/auth';
 import transactionCategoryRouter from './routes/transactionCategory';
 import transCtgryTypesRouter from './routes/transCtgryType';
+import transactionsRouter from './routes/transaction';
 
 class App {
   app: express.Application = express();
@@ -35,6 +36,7 @@ class App {
     this.app.use('/users', usersRouter);
     this.app.use('/transaction_categories', transactionCategoryRouter);
     this.app.use('/transaction_category_types', transCtgryTypesRouter);
+    this.app.use('/transactions', transactionsRouter);
   };
 
   private middlewares = (): void => {

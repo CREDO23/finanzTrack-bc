@@ -13,17 +13,17 @@ export class TransactionCategoryService {
     return new Promise<Error | ITransactionCategory>(
       async (resolve, reject) => {
         try {
-          if (!isValidUUID(type_id)) {
-            reject(error.NotAcceptable('Invalid format [uuid] for type_id'));
-          }
-
           const validTransactionCategory: {
             category: ITransactionCategory;
             type_id: UUID;
           } = await TransCtgryVldtionService.create.validateAsync({
-            category: { ...category },
+            category,
             type_id,
           });
+
+          if (!isValidUUID(type_id)) {
+            reject(error.NotAcceptable('Invalid format [uuid] for type_id'));
+          }
 
           const isExist = await TransactionCategory.findOne({
             where: { name: validTransactionCategory.category.name },
@@ -65,6 +65,15 @@ export class TransactionCategoryService {
         try {
           const transactionCategories = await TransactionCategory.findAll({
             raw: true,
+            include: [
+              {
+                model: TransactionCategoryType,
+                attributes: ['id', 'label', 'description'],
+                as: 'type',
+              },
+            ],
+            nest: true,
+            attributes: { exclude: ['type_id'] },
           });
 
           resolve(transactionCategories);
