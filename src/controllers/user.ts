@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import { UserService } from '../services/user';
 import { Request, Response, NextFunction } from 'express';
 
@@ -20,4 +21,24 @@ const getAllUsers = async (
   }
 };
 
-export { getAllUsers };
+const getOneUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const user = await UserService.getOne(id as UUID);
+
+    res.json(<IClientResponse>{
+      message: 'User',
+      data: user,
+      error: null,
+      success: true,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export { getAllUsers, getOneUser };

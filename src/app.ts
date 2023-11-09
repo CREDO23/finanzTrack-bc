@@ -6,6 +6,8 @@ import * as error from 'http-errors';
 import { dbConnection } from './config/db';
 import usersRouter from './routes/user';
 import authRouter from './routes/auth';
+import transactionCategoryRouter from './routes/transactionCategory';
+import transCtgryTypesRouter from './routes/transCtgryType';
 
 class App {
   app: express.Application = express();
@@ -31,6 +33,8 @@ class App {
 
     this.app.use('/auth', authRouter);
     this.app.use('/users', usersRouter);
+    this.app.use('/transaction_categories', transactionCategoryRouter);
+    this.app.use('/transaction_category_types', transCtgryTypesRouter);
   };
 
   private middlewares = (): void => {
