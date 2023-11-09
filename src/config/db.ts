@@ -12,6 +12,7 @@ const sequelize = new Sequelize(`${process.env.DB_URI}`, {
 
 // Load all models/associations
 import '../models';
+import seedTransCtgryType from '../sedders/transactionCategoryType';
 
 const dbConnection = async () => {
   try {
@@ -19,7 +20,7 @@ const dbConnection = async () => {
     sequelize.authenticate();
 
     //synch all tables
-    sequelize.sync({ force: true });
+    sequelize.sync({ alter: true }).then(() => seedTransCtgryType());
     console.log('Database connection established');
   } catch (error) {
     console.log(error);
