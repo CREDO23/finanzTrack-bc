@@ -36,7 +36,10 @@ export class TransactionCategoryService {
               ...validTransactionCategory.category,
             });
 
-            resolve({ ...newTransactionCategory, type: categoryType });
+            resolve({
+              ...newTransactionCategory.dataValues,
+              type: categoryType,
+            });
           } else {
             if (!categoryType) {
               reject(
@@ -74,6 +77,7 @@ export class TransactionCategoryService {
             ],
             nest: true,
             attributes: { exclude: ['type_id'] },
+            order: [['updatedAt', 'DESC']],
           });
 
           resolve(transactionCategories);
