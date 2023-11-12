@@ -29,7 +29,7 @@ class TransactionCategory extends Model<
   InferAttributes<TransactionCategory, { omit: 'type' | 'transactions' }>,
   InferCreationAttributes<TransactionCategory, { omit: 'type' }>
 > {
-  declare id: CreationOptional<number>;
+  declare id: CreationOptional<string>;
   declare name: string;
   declare description: string;
 

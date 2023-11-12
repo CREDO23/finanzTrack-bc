@@ -13,18 +13,24 @@ declare global {
   }
 
   interface ITransactionCategoryType {
-    label: 'expense' | 'income';
+    label: string;
     description: string;
   }
 
   interface ITransactionCategory {
+    id?: string;
     name: string;
     description: string;
+    type_id?: string;
+    type?: ITransactionCategoryType;
   }
 
   interface ITransaction {
+    id?: string;
     amount: number;
     description: string;
+    category_id?: string;
+    catedory?: ITransactionCategory;
   }
 }
 

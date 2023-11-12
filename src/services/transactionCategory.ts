@@ -36,7 +36,7 @@ export class TransactionCategoryService {
               ...validTransactionCategory.category,
             });
 
-            resolve(newTransactionCategory);
+            resolve({ ...newTransactionCategory, type: categoryType });
           } else {
             if (!categoryType) {
               reject(
