@@ -32,11 +32,11 @@ class App {
       res.send('Server is running');
     });
 
-    this.app.use('/auth', authRouter);
-    this.app.use('/users', usersRouter);
-    this.app.use('/transaction_categories', transactionCategoryRouter);
-    this.app.use('/transaction_category_types', transCtgryTypesRouter);
-    this.app.use('/transactions', transactionsRouter);
+    this.app.use('/api/v1/auth', authRouter);
+    this.app.use('/api/v1/users', usersRouter);
+    this.app.use('/api/v1/transaction_categories', transactionCategoryRouter);
+    this.app.use('/api/v1/transaction_category_types', transCtgryTypesRouter);
+    this.app.use('/api/v1/transactions', transactionsRouter);
   };
 
   private middlewares = (): void => {
