@@ -16,7 +16,7 @@ export class TransactionValidationService {
       })
       .required(),
     category_id: joi.string().required().messages({
-      'any.required': 'The type_id is required',
+      'any.required': 'The category_id is required',
     }),
   });
 }

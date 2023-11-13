@@ -76,7 +76,6 @@ export class TransactionCategoryService {
               },
             ],
             nest: true,
-            attributes: { exclude: ['type_id'] },
             order: [['updatedAt', 'DESC']],
           });
 

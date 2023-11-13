@@ -11,8 +11,8 @@ export class TransactionService {
   static create = async (
     transaction: ITransaction,
     category_id: UUID,
-  ): Promise<Error | Transaction> => {
-    return new Promise<Error | Transaction>(async (resolve, reject) => {
+  ): Promise<Error | ITransaction> => {
+    return new Promise<Error | ITransaction>(async (resolve, reject) => {
       try {
         const valideTransaction: {
           transaction: ITransaction;
@@ -26,15 +26,29 @@ export class TransactionService {
           reject(error.NotAcceptable('Invalid format [uuid] for category_id'));
         }
 
-        const transactionCategory =
-          await TransactionCategory.findByPk(category_id);
+        const transactionCategory = await TransactionCategory.findByPk(
+          category_id,
+          {
+            include: [
+              {
+                model: TransactionCategoryType,
+                attributes: ['id', 'label', 'description'],
+                as: 'type',
+              },
+            ],
+            nest: true,
+          },
+        );
 
         if (transactionCategory) {
-          const transaction = await transactionCategory.createTransaction({
+          const newTransaction = await transactionCategory.createTransaction({
             ...valideTransaction.transaction,
           });
 
-          resolve(transaction);
+          resolve({
+            ...newTransaction.dataValues,
+            category: transactionCategory,
+          });
         } else {
           reject(
             error.NotAcceptable(
@@ -54,19 +68,17 @@ export class TransactionService {
         const transactions = await Transaction.findAll({
           raw: true,
           nest: true,
-          attributes: ['id', 'amount', 'description'],
           include: {
             model: TransactionCategory,
-            attributes: [],
             as: 'category',
             include: [
               {
                 model: TransactionCategoryType,
-                attributes: [],
                 as: 'type',
               },
             ],
           },
+          order: [['updatedAt', 'DESC']],
         });
 
         resolve(transactions);
