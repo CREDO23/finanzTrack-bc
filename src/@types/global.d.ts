@@ -30,7 +30,7 @@ declare global {
     amount: number;
     description: string;
     category_id?: string;
-    catedory?: ITransactionCategory;
+    category?: ITransactionCategory;
   }
 }
 
