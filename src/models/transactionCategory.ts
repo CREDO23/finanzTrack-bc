@@ -24,9 +24,13 @@ import {
 } from 'sequelize';
 import TransactionCategoryType from './transactionCategoryType';
 import Transaction from './transaction';
+import User from './user';
 
 class TransactionCategory extends Model<
-  InferAttributes<TransactionCategory, { omit: 'type' | 'transactions' }>,
+  InferAttributes<
+    TransactionCategory,
+    { omit: 'type' | 'transactions' | 'owner' }
+  >,
   InferCreationAttributes<TransactionCategory, { omit: 'type' }>
 > {
   declare id: CreationOptional<string>;
@@ -35,10 +39,12 @@ class TransactionCategory extends Model<
 
   // Foreign key
   declare type_id: ForeignKey<TransactionCategoryType['id']>;
+  declare owner_id: ForeignKey<User['id']>;
 
   // Loaded after association
   declare type: NonAttribute<TransactionCategoryType>;
   declare transactions: NonAttribute<Transaction[]>;
+  declare owner: NonAttribute<User>;
 
   // Type mixins
   declare setType: BelongsToSetAssociationMixin<
@@ -47,6 +53,11 @@ class TransactionCategory extends Model<
   >;
   declare getType: BelongsToGetAssociationMixin<TransactionCategoryType>;
   declare createType: BelongsToCreateAssociationMixin<TransactionCategoryType>;
+
+  // User mixins
+  declare setOwner: BelongsToSetAssociationMixin<User, string>;
+  declare getOwner: BelongsToGetAssociationMixin<User>;
+  declare createOwner: BelongsToCreateAssociationMixin<User>;
 
   // Transaction mixins
   declare getTransactions: HasManyGetAssociationsMixin<Transaction[]>;
@@ -70,6 +81,7 @@ class TransactionCategory extends Model<
   declare static associations: {
     transactions: Association<TransactionCategory, Transaction>;
     types: Association<TransactionCategory, TransactionCategoryType>;
+    user: Association<TransactionCategory, User>;
   };
 }
 

@@ -22,7 +22,9 @@ declare global {
     name: string;
     description: string;
     type_id?: string;
+    owner_id?: string;
     type?: ITransactionCategoryType;
+    owner?: IUser;
   }
 
   interface ITransaction {

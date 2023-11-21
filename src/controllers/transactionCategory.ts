@@ -7,11 +7,12 @@ const createTransactionCategory = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { category, type_id } = req.body;
+    const { category, type_id, owner_id } = req.body;
 
     const newTransactionCategory = await TransactionCategoryService.create(
       category,
       type_id,
+      owner_id,
     );
 
     res.json(<IClientResponse>{
