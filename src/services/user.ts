@@ -1,6 +1,5 @@
 import { UUID } from 'crypto';
-import { User } from '../models/user';
-import sequelize from 'sequelize';
+import User from '../models/user';
 
 export class UserService {
   static getAll = async (): Promise<Error | IUser[]> => {

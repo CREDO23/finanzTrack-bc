@@ -1,4 +1,4 @@
-import { User } from '../models/user';
+import User from '../models/user';
 import { AuthValidationService } from './validations/auth';
 import * as error from 'http-errors';
 import { comparePassword, hashPassword } from '../helpers/bcrypt';

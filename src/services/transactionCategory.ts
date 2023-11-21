@@ -4,11 +4,13 @@ import { TransCtgryVldtionService } from './validations/transactionCategory';
 import * as error from 'http-errors';
 import TransactionCategoryType from '../models/transactionCategoryType';
 import { validate as isValidUUID } from 'uuid';
+import User from '../models/user';
 
 export class TransactionCategoryService {
   static create = async (
     category: ITransactionCategory,
     type_id: UUID,
+    owner_id: UUID,
   ): Promise<Error | ITransactionCategory> => {
     return new Promise<Error | ITransactionCategory>(
       async (resolve, reject) => {
@@ -16,13 +18,19 @@ export class TransactionCategoryService {
           const validTransactionCategory: {
             category: ITransactionCategory;
             type_id: UUID;
+            owner_id: UUID;
           } = await TransCtgryVldtionService.create.validateAsync({
             category,
             type_id,
+            owner_id,
           });
 
           if (!isValidUUID(type_id)) {
             reject(error.NotAcceptable('Invalid format [uuid] for type_id'));
+          }
+
+          if (!isValidUUID(owner_id)) {
+            reject(error.NotAcceptable('Invalid format [uuid] for owner_id'));
           }
 
           const isExist = await TransactionCategory.findOne({
@@ -30,21 +38,31 @@ export class TransactionCategoryService {
           });
 
           const categoryType = await TransactionCategoryType.findByPk(type_id);
+          const owner = await User.findByPk(owner_id);
 
-          if (!isExist && categoryType) {
+          console.log(owner);
+
+          if (!isExist && categoryType && owner) {
             const newTransactionCategory = await categoryType.createCategory({
               ...validTransactionCategory.category,
             });
 
+            newTransactionCategory.setOwner(owner);
+
             resolve({
               ...newTransactionCategory.dataValues,
               type: categoryType,
+              owner,
             });
           } else {
             if (!categoryType) {
               reject(
                 error.Conflict(`The category type you provided does not exist`),
               );
+            }
+
+            if (!owner) {
+              reject(error.Conflict(`The owner you provided does not exist`));
             }
 
             if (isExist) {
