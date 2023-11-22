@@ -7,6 +7,7 @@ declare global {
   }
 
   interface IUser {
+    id?: string;
     name: string;
     email: string;
     password?: string;
@@ -33,6 +34,13 @@ declare global {
     description: string;
     category_id?: string;
     category?: ITransactionCategory;
+  }
+
+  // Add user to Req in express namespace
+  namespace Express {
+    interface Request {
+      auth: IUser;
+    }
   }
 }
 

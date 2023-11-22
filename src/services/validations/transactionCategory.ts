@@ -15,8 +15,5 @@ export class TransCtgryVldtionService {
     type_id: joi.string().required().messages({
       'any.required': 'The type_id is required',
     }),
-    owner_id: joi.string().required().messages({
-      'any.required': 'The owner_id is required',
-    }),
   });
 }

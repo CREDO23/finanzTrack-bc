@@ -18,11 +18,9 @@ export class TransactionCategoryService {
           const validTransactionCategory: {
             category: ITransactionCategory;
             type_id: UUID;
-            owner_id: UUID;
           } = await TransCtgryVldtionService.create.validateAsync({
             category,
             type_id,
-            owner_id,
           });
 
           if (!isValidUUID(type_id)) {
@@ -30,17 +28,18 @@ export class TransactionCategoryService {
           }
 
           if (!isValidUUID(owner_id)) {
-            reject(error.NotAcceptable('Invalid format [uuid] for owner_id'));
+            reject(error.NotAcceptable('Invalid format [uuid] for user_id'));
           }
 
+          // Check if a transaction with the same name exists
           const isExist = await TransactionCategory.findOne({
             where: { name: validTransactionCategory.category.name },
           });
 
+          // Find the category type
           const categoryType = await TransactionCategoryType.findByPk(type_id);
+          //Find the owner
           const owner = await User.findByPk(owner_id);
-
-          console.log(owner);
 
           if (!isExist && categoryType && owner) {
             const newTransactionCategory = await categoryType.createCategory({
@@ -49,10 +48,12 @@ export class TransactionCategoryService {
 
             newTransactionCategory.setOwner(owner);
 
+            const { email, name, id } = owner;
+
             resolve({
               ...newTransactionCategory.dataValues,
               type: categoryType,
-              owner,
+              owner: { email, name, id },
             });
           } else {
             if (!categoryType) {
@@ -80,7 +81,9 @@ export class TransactionCategoryService {
     );
   };
 
-  static getAll = async (): Promise<Error | TransactionCategory[]> => {
+  static getAll = async (
+    owner_id: UUID,
+  ): Promise<Error | TransactionCategory[]> => {
     return new Promise<Error | TransactionCategory[]>(
       async (resolve, reject) => {
         try {
@@ -92,9 +95,15 @@ export class TransactionCategoryService {
                 attributes: ['id', 'label', 'description'],
                 as: 'type',
               },
+              {
+                model: User,
+                attributes: { exclude: ['createdAt', 'updatedAt', 'password'] },
+                as: 'owner',
+              },
             ],
             nest: true,
             order: [['updatedAt', 'DESC']],
+            where: { owner_id },
           });
 
           resolve(transactionCategories);
