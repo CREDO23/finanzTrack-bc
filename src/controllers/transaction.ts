@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { TransactionService } from '../services/transaction';
+import { UUID } from 'crypto';
 
 const createTransaction = async (
   req: Request,
@@ -31,7 +32,9 @@ const getAllTransactions = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const transactions = await TransactionService.getAll();
+    const user_id = req.auth.id;
+
+    const transactions = await TransactionService.getAll(user_id as UUID);
 
     res.json(<IClientResponse>{
       message: 'Transactions',

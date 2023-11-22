@@ -62,7 +62,7 @@ export class TransactionService {
     });
   };
 
-  static getAll = async (): Promise<Error | Transaction[]> => {
+  static getAll = async (owner_id: UUID): Promise<Error | Transaction[]> => {
     return new Promise<Error | Transaction[]>(async (resolve, reject) => {
       try {
         const transactions = await Transaction.findAll({
@@ -79,6 +79,7 @@ export class TransactionService {
             ],
           },
           order: [['updatedAt', 'DESC']],
+          where: { '$category.owner_id$': owner_id },
         });
 
         resolve(transactions);

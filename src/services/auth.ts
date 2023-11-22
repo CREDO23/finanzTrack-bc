@@ -25,7 +25,7 @@ export class AuthService {
               const newUser = await User.create({ ...user, password: hash });
 
               const accessToken = await signAccessToken(
-                { name: validUser.name, email: validUser.email },
+                { name: newUser.name, email: newUser.email, id: newUser.id },
                 process.env.ACCESS_TOKEN_SECRET,
               );
 

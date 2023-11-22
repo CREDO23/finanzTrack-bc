@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import { TransactionCategoryService } from '../services/transactionCategory';
 import { Request, Response, NextFunction } from 'express';
 
@@ -7,12 +8,13 @@ const createTransactionCategory = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { category, type_id, owner_id } = req.body;
+    const { category, type_id } = req.body;
+    const user_id = req.auth.id;
 
     const newTransactionCategory = await TransactionCategoryService.create(
       category,
       type_id,
-      owner_id,
+      user_id as UUID,
     );
 
     res.json(<IClientResponse>{
@@ -32,7 +34,11 @@ const getAllTransactionCategories = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const transactionCategories = await TransactionCategoryService.getAll();
+    const user_id = req.auth.id;
+
+    const transactionCategories = await TransactionCategoryService.getAll(
+      user_id as UUID,
+    );
 
     res.json(<IClientResponse>{
       message: 'Transaction categories',
