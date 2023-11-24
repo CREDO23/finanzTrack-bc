@@ -2,7 +2,7 @@
 
 The FinanzTrack API serves as the backend for the FinanzTrack financial tracking application, providing endpoints for managing financial data. Whether you're developing additional features for FinanzTrack or integrating it into your own project, this API offers a flexible foundation.
 
-Author: CREDO23 <bakerathierry@gmail.com>
+Author: BAKERA Thierry <bakerathierry@gmail.com>
 
 
 ### GETTING STARTED
