@@ -35,7 +35,6 @@ const getAllTransactionCategories = async (
 ): Promise<void> => {
   try {
     const user_id = req.auth.id;
-
     const transactionCategories = await TransactionCategoryService.getAll(
       user_id as UUID,
     );

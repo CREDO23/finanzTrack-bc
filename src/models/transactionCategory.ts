@@ -12,6 +12,7 @@ import {
   HasManyHasAssociationsMixin,
   HasManyRemoveAssociationMixin,
   HasManyRemoveAssociationsMixin,
+  BelongsToManyAddAssociationMixin,
   Model,
   InferAttributes,
   InferCreationAttributes,
@@ -29,9 +30,12 @@ import User from './user';
 class TransactionCategory extends Model<
   InferAttributes<
     TransactionCategory,
-    { omit: 'type' | 'transactions' | 'owner' }
+    { omit: 'type' | 'transactions' | 'users' }
   >,
-  InferCreationAttributes<TransactionCategory, { omit: 'type' }>
+  InferCreationAttributes<
+    TransactionCategory,
+    { omit: 'type' | 'transactions' | 'users' }
+  >
 > {
   declare id: CreationOptional<string>;
   declare name: string;
@@ -39,12 +43,11 @@ class TransactionCategory extends Model<
 
   // Foreign key
   declare type_id: ForeignKey<TransactionCategoryType['id']>;
-  declare owner_id: ForeignKey<User['id']>;
 
   // Loaded after association
   declare type: NonAttribute<TransactionCategoryType>;
   declare transactions: NonAttribute<Transaction[]>;
-  declare owner: NonAttribute<User>;
+  declare users: NonAttribute<User[]>;
 
   // Type mixins
   declare setType: BelongsToSetAssociationMixin<
@@ -54,10 +57,8 @@ class TransactionCategory extends Model<
   declare getType: BelongsToGetAssociationMixin<TransactionCategoryType>;
   declare createType: BelongsToCreateAssociationMixin<TransactionCategoryType>;
 
-  // User mixins
-  declare setOwner: BelongsToSetAssociationMixin<User, string>;
-  declare getOwner: BelongsToGetAssociationMixin<User>;
-  declare createOwner: BelongsToCreateAssociationMixin<User>;
+  // Users mixins
+  declare addUser: BelongsToManyAddAssociationMixin<User, string>;
 
   // Transaction mixins
   declare getTransactions: HasManyGetAssociationsMixin<Transaction[]>;

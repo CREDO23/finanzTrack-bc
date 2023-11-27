@@ -5,6 +5,7 @@ import * as error from 'http-errors';
 import TransactionCategoryType from '../models/transactionCategoryType';
 import { validate as isValidUUID } from 'uuid';
 import User from '../models/user';
+import UserTransCategories from '../models/usersCategories';
 
 export class TransactionCategoryService {
   static create = async (
@@ -41,12 +42,16 @@ export class TransactionCategoryService {
           //Find the owner
           const owner = await User.findByPk(owner_id);
 
-          if (!isExist && categoryType && owner) {
+          if (isExist) {
+            isExist.addUser(owner);
+
+            resolve(isExist);
+          } else if (categoryType && owner) {
             const newTransactionCategory = await categoryType.createCategory({
               ...validTransactionCategory.category,
             });
 
-            newTransactionCategory.setOwner(owner);
+            newTransactionCategory.addUser(owner);
 
             const { email, name, id } = owner;
 
@@ -65,14 +70,6 @@ export class TransactionCategoryService {
             if (!owner) {
               reject(error.Conflict(`The owner you provided does not exist`));
             }
-
-            if (isExist) {
-              reject(
-                error.Conflict(
-                  `A category with name ${validTransactionCategory.category.name}  already exists`,
-                ),
-              );
-            }
           }
         } catch (error) {
           reject(error);
@@ -82,28 +79,31 @@ export class TransactionCategoryService {
   };
 
   static getAll = async (
-    owner_id: UUID,
-  ): Promise<Error | TransactionCategory[]> => {
-    return new Promise<Error | TransactionCategory[]>(
+    user_id: UUID,
+  ): Promise<Error | UserTransCategories[]> => {
+    return new Promise<Error | UserTransCategories[]>(
       async (resolve, reject) => {
         try {
-          const transactionCategories = await TransactionCategory.findAll({
+          const transactionCategories = await UserTransCategories.findAll({
+            where: { user_id },
             raw: true,
+            nest: true,
             include: [
               {
-                model: TransactionCategoryType,
-                attributes: ['id', 'label', 'description'],
-                as: 'type',
-              },
-              {
-                model: User,
-                attributes: { exclude: ['createdAt', 'updatedAt', 'password'] },
-                as: 'owner',
+                model: TransactionCategory,
+                as: 'category',
+                include: [
+                  {
+                    model: TransactionCategoryType,
+                    as: 'type',
+                    attributes: { exclude: ['createdAt', 'updatedAt'] },
+                  },
+                ],
               },
             ],
-            nest: true,
-            order: [['updatedAt', 'DESC']],
-            where: { owner_id },
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'category_id', 'user_id'],
+            },
           });
 
           resolve(transactionCategories);

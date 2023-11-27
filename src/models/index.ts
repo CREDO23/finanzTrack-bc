@@ -2,6 +2,7 @@ import Transaction from './transaction';
 import TransactionCategory from './transactionCategory';
 import TransactionCategoryType from './transactionCategoryType';
 import User from './user';
+import UserTransCategories from './usersCategories';
 
 // Transaction - TransactionCategory
 TransactionCategory.hasMany(Transaction, {
@@ -14,13 +15,23 @@ Transaction.belongsTo(TransactionCategory, {
 });
 
 // TransactionCategory - User
-User.hasMany(TransactionCategory, {
-  as: { singular: 'transactionCategory', plural: 'transactionCategories' },
-  foreignKey: 'owner_id',
+TransactionCategory.belongsToMany(User, {
+  through: UserTransCategories,
+  as: 'user',
+  foreignKey: 'category_id',
 });
-TransactionCategory.belongsTo(User, {
-  as: 'owner',
-  foreignKey: 'owner_id',
+User.belongsToMany(TransactionCategory, {
+  through: UserTransCategories,
+  as: { plural: 'transactionCategories', singular: 'transactionCategoriy' },
+  foreignKey: 'user_id',
+});
+UserTransCategories.belongsTo(User, {
+  as: 'user',
+  foreignKey: 'user_id',
+});
+UserTransCategories.belongsTo(TransactionCategory, {
+  as: 'category',
+  foreignKey: 'category_id',
 });
 
 // TransactionCategory - TransactionCategoryType
