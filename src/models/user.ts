@@ -64,10 +64,7 @@ class User extends Model<
     string
   >;
   declare countTransactions: HasManyCountAssociationsMixin;
-  declare createTransaction: HasManyCreateAssociationMixin<
-    TransactionCategory,
-    'owner_id'
-  >;
+  declare createTransaction: HasManyCreateAssociationMixin<TransactionCategory>;
 
   // Associations
   declare static associations: {
