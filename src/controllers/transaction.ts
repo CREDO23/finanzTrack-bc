@@ -33,7 +33,6 @@ const getAllTransactions = async (
 ): Promise<void> => {
   try {
     const user_id = req.auth.id;
-
     const transactions = await TransactionService.getAll(user_id as UUID);
 
     res.json(<IClientResponse>{
