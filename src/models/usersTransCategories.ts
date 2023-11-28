@@ -6,6 +6,7 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
 } from 'sequelize';
 import User from './user';
 import TransactionCategory from './transactionCategory';
@@ -15,6 +16,9 @@ class UserTransCategories extends Model<
   InferCreationAttributes<UserTransCategories>
 > {
   declare id: CreationOptional<string>;
+
+  declare users: NonAttribute<User[]>;
+  declare category: NonAttribute<TransactionCategory>;
 
   // Foreign keys
   declare user_id: ForeignKey<User['id']>;
