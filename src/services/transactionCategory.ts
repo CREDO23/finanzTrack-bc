@@ -5,13 +5,13 @@ import * as error from 'http-errors';
 import TransactionCategoryType from '../models/transactionCategoryType';
 import { validate as isValidUUID } from 'uuid';
 import User from '../models/user';
-import UserTransCategories from '../models/usersCategories';
+import UserTransCategories from '../models/usersTransCategories';
 
 export class TransactionCategoryService {
   static create = async (
     category: ITransactionCategory,
     type_id: UUID,
-    owner_id: UUID,
+    user_id: UUID,
   ): Promise<Error | ITransactionCategory> => {
     return new Promise<Error | ITransactionCategory>(
       async (resolve, reject) => {
@@ -28,37 +28,38 @@ export class TransactionCategoryService {
             reject(error.NotAcceptable('Invalid format [uuid] for type_id'));
           }
 
-          if (!isValidUUID(owner_id)) {
+          if (!isValidUUID(user_id)) {
             reject(error.NotAcceptable('Invalid format [uuid] for user_id'));
           }
+
+          // Find the category type
+          const categoryType = await TransactionCategoryType.findByPk(type_id);
+
+          //Find the user
+          const user = await User.findByPk(user_id);
 
           // Check if a transaction with the same name exists
           const isExist = await TransactionCategory.findOne({
             where: { name: validTransactionCategory.category.name },
           });
 
-          // Find the category type
-          const categoryType = await TransactionCategoryType.findByPk(type_id);
-          //Find the owner
-          const owner = await User.findByPk(owner_id);
-
           if (isExist) {
-            isExist.addUser(owner);
+            isExist.addUser(user);
 
-            resolve(isExist);
-          } else if (categoryType && owner) {
+            resolve({
+              ...isExist.dataValues,
+              type: categoryType,
+            });
+          } else if (categoryType && user) {
             const newTransactionCategory = await categoryType.createCategory({
               ...validTransactionCategory.category,
             });
 
-            newTransactionCategory.addUser(owner);
-
-            const { email, name, id } = owner;
+            newTransactionCategory.addUser(user);
 
             resolve({
               ...newTransactionCategory.dataValues,
               type: categoryType,
-              owner: { email, name, id },
             });
           } else {
             if (!categoryType) {
@@ -67,8 +68,8 @@ export class TransactionCategoryService {
               );
             }
 
-            if (!owner) {
-              reject(error.Conflict(`The owner you provided does not exist`));
+            if (!user) {
+              reject(error.Conflict(`The user you provided does not exist`));
             }
           }
         } catch (error) {
@@ -80,8 +81,8 @@ export class TransactionCategoryService {
 
   static getAll = async (
     user_id: UUID,
-  ): Promise<Error | UserTransCategories[]> => {
-    return new Promise<Error | UserTransCategories[]>(
+  ): Promise<Error | TransactionCategory[]> => {
+    return new Promise<Error | TransactionCategory[]>(
       async (resolve, reject) => {
         try {
           const transactionCategories = await UserTransCategories.findAll({
@@ -105,8 +106,7 @@ export class TransactionCategoryService {
               exclude: ['createdAt', 'updatedAt', 'category_id', 'user_id'],
             },
           });
-
-          resolve(transactionCategories);
+          resolve(transactionCategories.map((el) => el.category));
         } catch (error) {
           reject(error);
         }

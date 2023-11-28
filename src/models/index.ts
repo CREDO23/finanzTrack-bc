@@ -2,7 +2,7 @@ import Transaction from './transaction';
 import TransactionCategory from './transactionCategory';
 import TransactionCategoryType from './transactionCategoryType';
 import User from './user';
-import UserTransCategories from './usersCategories';
+import UserTransCategories from './usersTransCategories';
 
 // Transaction - TransactionCategory
 TransactionCategory.hasMany(Transaction, {
