@@ -9,10 +9,12 @@ const createTransaction = async (
 ): Promise<void> => {
   try {
     const { transaction, category_id } = req.body;
+    const user_id = req.auth.id;
 
     const newTransaction = await TransactionService.create(
       transaction,
       category_id,
+      user_id as UUID,
     );
 
     res.json(<IClientResponse>{
