@@ -14,6 +14,16 @@ Transaction.belongsTo(TransactionCategory, {
   foreignKey: 'category_id',
 });
 
+// Transaction - User
+User.hasMany(Transaction, {
+  as: { singular: 'transaction', plural: 'transactions' },
+  foreignKey: 'user_id',
+});
+Transaction.belongsTo(User, {
+  as: 'user',
+  foreignKey: 'user_id',
+});
+
 // TransactionCategory - User
 TransactionCategory.belongsToMany(User, {
   through: UserTransCategories,

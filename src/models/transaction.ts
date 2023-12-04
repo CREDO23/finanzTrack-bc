@@ -13,6 +13,7 @@ import {
   NonAttribute,
 } from 'sequelize';
 import TransactionCategory from './transactionCategory';
+import User from './user';
 
 class Transaction extends Model<
   InferAttributes<Transaction>,
@@ -26,8 +27,10 @@ class Transaction extends Model<
 
   // Foreign key
   declare category_id: ForeignKey<TransactionCategory['id']>;
+  declare user_id: ForeignKey<User['id']>;
   // Loaded after association
   declare category: NonAttribute<TransactionCategory>;
+  declare user: NonAttribute<User>;
 
   // Category mixins
   declare setCategory: BelongsToSetAssociationMixin<

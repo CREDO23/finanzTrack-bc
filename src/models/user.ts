@@ -16,13 +16,13 @@ import {
   HasManyRemoveAssociationMixin,
   HasManyRemoveAssociationsMixin,
   HasManySetAssociationsMixin,
-  Transaction,
 } from 'sequelize';
 import { sequelize } from '../config/db';
 import TransactionCategory from './transactionCategory';
+import Transaction from './transaction';
 
 class User extends Model<
-  InferAttributes<User, { omit: 'transactionCategories' }>,
+  InferAttributes<User, { omit: 'transactions' }>,
   InferCreationAttributes<User>
 > {
   declare id: CreationOptional<string>;
@@ -31,44 +31,27 @@ class User extends Model<
   declare password: string;
 
   // Loaded after association
-  declare transactionCategories: NonAttribute<TransactionCategory[]>;
+  declare transactions: NonAttribute<Transaction[]>;
 
   // Transaction categories mixins
-  declare getTransactions: HasManyGetAssociationsMixin<TransactionCategory[]>;
-  declare addTransaction: HasManyAddAssociationMixin<
-    TransactionCategory,
-    string
-  >;
-  declare addTransactions: HasManyAddAssociationsMixin<
-    TransactionCategory,
-    string
-  >;
-  declare setTransactions: HasManySetAssociationsMixin<
-    TransactionCategory,
-    string
-  >;
-  declare removeTransaction: HasManyRemoveAssociationMixin<
-    TransactionCategory,
-    string
-  >;
+  declare getTransactions: HasManyGetAssociationsMixin<Transaction[]>;
+  declare addTransaction: HasManyAddAssociationMixin<Transaction, string>;
+  declare addTransactions: HasManyAddAssociationsMixin<Transaction, string>;
+  declare setTransactions: HasManySetAssociationsMixin<Transaction, string>;
+  declare removeTransaction: HasManyRemoveAssociationMixin<Transaction, string>;
   declare removeTransactions: HasManyRemoveAssociationsMixin<
-    TransactionCategory,
+    Transaction,
     string
   >;
-  declare hasTransaction: HasManyHasAssociationMixin<
-    TransactionCategory,
-    string
-  >;
-  declare hasTransactions: HasManyHasAssociationsMixin<
-    TransactionCategory,
-    string
-  >;
+  declare hasTransaction: HasManyHasAssociationMixin<Transaction, string>;
+  declare hasTransactions: HasManyHasAssociationsMixin<Transaction, string>;
   declare countTransactions: HasManyCountAssociationsMixin;
-  declare createTransaction: HasManyCreateAssociationMixin<TransactionCategory>;
+  declare createTransaction: HasManyCreateAssociationMixin<Transaction>;
 
   // Associations
   declare static associations: {
-    transactionCategories: Association<User, TransactionCategory>;
+    transactionCategories: Association<User, Transaction>;
+    transactions: Association<User, Transaction>;
   };
 }
 
